@@ -1,0 +1,61 @@
+START epsilon
+ARRAYSIZE0 semi lsqbr rpar comma
+EXPR0 comma rpar semi
+FACTOR1 mult div and rsqbr eq neq lt gt leq geq plus minus or comma rpar semi
+FACTOR0 mult div and rsqbr eq neq lt gt leq geq plus minus or comma rpar semi
+FUNCBODY struct impl func rcurbr
+FUNCHEAD semi lcurbr
+FPARAMS rpar
+FUNCTIONCALL epsilon
+REPTFUNCTIONCALL0 epsilon
+FUNCDECL rcurbr public private
+PROG epsilon
+ARITHEXPR rsqbr eq neq lt gt leq geq comma rpar semi
+RELOP id intlit floatlit lpar not plus minus
+INDICE mult div and lsqbr equal dot rsqbr eq neq lt gt leq geq plus minus or comma rpar semi
+APARAMSTAIL comma rpar
+REPTAPARAMS1 rpar
+REPTFPARAMS3 rpar comma
+FPARAMSTAIL comma rpar
+REPTFPARAMS4 rpar
+REPTFPARAMSTAIL4 comma rpar
+REPTFUNCBODY1 rcurbr
+REPTIMPLDEF3 rcurbr
+REPTOPTSTRUCTDECL22 lcurbr
+REPTPROG0 epsilon
+MEMBERDECL rcurbr public private
+ARRAYSIZE semi lsqbr rpar comma
+RETURNTYPE semi lcurbr
+ADDOP id intlit floatlit lpar not plus minus
+RIGHTRECARITHEXPR rsqbr eq neq lt gt leq geq comma rpar semi
+MULTOP id intlit floatlit lpar not plus minus
+SIGN id intlit floatlit lpar not plus minus
+REPTSTATBLOCK1 rcurbr
+RELEXPR rpar
+STATBLOCK else semi
+STATEMENT1 else semi let id if while read write return rcurbr
+ASSIGNOP id intlit floatlit lpar not plus minus
+EXPR comma rpar semi
+STATEMENT2 else semi let id if while read write return rcurbr
+STATEMENT0 else semi let id if while read write return rcurbr
+OPTSTRUCTDECL2 lcurbr
+REPTSTRUCTDECL4 rcurbr
+STRUCTORIMPLORFUNC struct impl func
+STRUCTDECL struct impl func
+IMPLDEF struct impl func
+FUNCDEF struct impl func rcurbr
+TERM rsqbr eq neq lt gt leq geq plus minus or comma rpar semi
+FACTOR mult div and rsqbr eq neq lt gt leq geq plus minus or comma rpar semi
+RIGHTRECTERM rsqbr eq neq lt gt leq geq plus minus or comma rpar semi
+TYPE rpar lcurbr comma lsqbr semi
+REPTVARDECL4 semi
+VARDECLORSTAT let id if while read write return rcurbr
+VARDECL public private let id if while read write return rcurbr
+STATEMENT else semi let id if while read write return rcurbr
+VARIABLE rpar
+REPTINDICE mult div and equal dot rsqbr eq neq lt gt leq geq plus minus or comma rpar semi
+APARAMS rpar
+VARIABLE1 rpar
+VARIABLE2 rpar
+VARIABLE0 rpar
+VISIBILITY let func

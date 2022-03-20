@@ -1,0 +1,61 @@
+START struct impl func
+ARRAYSIZE0 intlit rsqbr
+EXPR0 eq neq lt gt leq geq
+FACTOR1 dot
+FACTOR0 lpar dot lsqbr
+FUNCBODY lcurbr
+FUNCHEAD func
+FPARAMS id
+FUNCTIONCALL &epsilon
+REPTFUNCTIONCALL0 &epsilon
+FUNCDECL func
+PROG 	struct impl func
+ARITHEXPR id intlit floatlit lpar not plus minus
+RELOP eq neq lt gt leq geq
+INDICE lsqbr
+APARAMSTAIL comma
+REPTAPARAMS1 comma
+REPTFPARAMS3 lsqbr
+FPARAMSTAIL comma
+REPTFPARAMS4 comma
+REPTFPARAMS4 lsqbr
+REPTFUNCBODY1 let id if while read write return
+REPTIMPLDEF3 func
+REPTOPTSTRUCTDECL22 comma
+REPTPROG0 struct impl func
+MEMBERDECL let func
+ARRAYSIZE lsqbr
+RETURNTYPE void integer float id
+ADDOP plus minus or
+RIGHTRECARITHEXPR plus minus or
+MULTOP mult div and
+SIGN plus minus
+REPTSTATBLOCK1 id if while read write return
+RELEXPR id intlit floatlit lpar not plus minus
+STATBLOCK lcurbr id if while read write return
+STATEMENT1 dot equal
+ASSIGNOP equal
+EXPR id intlit floatlit lpar not plus minus
+STATEMENT2 dot semi
+STATEMENT0 lpar dot lsqbr equal
+OPTSTRUCTDECL2 inherits
+REPTSTRUCTDECL4 public private
+STRUCTORIMPLORFUNC struct impl func
+STRUCTDECL struct
+IMPLDEF impl
+FUNCDEF func
+TERM id intlit floatlit lpar not plus minus
+FACTOR id intlit floatlit lpar not plus minus
+RIGHTRECTERM mult div and
+TYPE integer float id
+REPTVARDECL4 lsqbr
+VARDECLORSTAT 	let id if while read write return
+VARDECL let
+STATEMENT id if while read write return
+VARIABLE id
+REPTINDICE lsqbr
+APARAMS 	id intlit floatlit lpar not plus minus
+VARIABLE1 dot
+VARIABLE2 dot
+VARIABLE0 lpar dot lsqbr
+VISIBILITY public private

@@ -1,0 +1,101 @@
+ID leaf id
+
+E epsilon
+
+TYPE leaf type
+
+INTNUM leaf intnum
+
+PLUS leaf plus
+
+MINUS leaf minus
+
+OR leaf or
+
+MULT leaf mult
+
+DIV leaf div
+
+AND leaf and
+
+FLOATNUM leaf floatNum
+
+SIGN leaf sign
+
+ASSIGNOP leaf assignOp
+
+PROG subtree prog -1
+
+STRUCTDECL subtree structDecl 3
+
+STATEMENT subtree statement 1
+
+IMPLDEF subtree impldef 2
+
+INHERLIST subtree inherList -1
+
+MEMBERLIST subtree memberList -1
+
+VISIBILITY leaf visibility
+
+VARDECL subtree varDecl 3
+
+FUNCDECL subtree funcDecl 3
+
+ARRAYSIZE subtree arrayList -1
+
+FPARAMSLIST subtree fParamsList -1
+
+FPARAM subtree fParam 3
+
+IMPLFUNCDEF subtree implFuncDef -1
+
+FUNCDEF subtree funcDef 4
+
+FACTOR subtree factor 1
+
+VARDECLORSTAT subtree varDeclOrStat -1
+
+RETURNSTAT subtree returnStat 1
+
+WRITESTAT subtree writeStat 1
+
+READSTAT subtree readStat 1
+
+IFSTAT subtree ifStat 3
+
+WHILESTAT subtree whileStat 2
+
+ASSIGNSTAT subtree assignStat 3
+
+STATBLOCK subtree statBlock -1
+
+RELEXPR subtree relExpr 3
+
+EXPR subtree expr 1
+
+RELEXPR subtree relExpr 3
+
+RELOP leaf relOp
+
+ADDOP subtree addOp  3
+
+TERM subtree term 1
+
+ARITHEXPR subtree arithExpr 1
+
+MULTOP subtree multOp 3
+
+NOTFACTOR subtree notFactor 1
+
+SIGNFACTOR subtree signFactor 2
+
+INDICELIST subtree indiceList -1
+
+APARAMS subtree aParams -1
+
+DOT subtree dot 2
+
+FUNCALLSTAT subtree funCallStat 1
+
+DOTLIST subtree dotList -1
