@@ -1,7 +1,6 @@
 package SymbolTable;
 
 import java.util.ArrayList;
-import java.util.Vector;
 
 public class SymTabEntry {
     public String             m_kind       = null;

@@ -3,6 +3,7 @@ package Node;
 import Visitor.*;
 import SymbolTable.*;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -122,6 +123,14 @@ public abstract class Node {
         System.out.println("============================================================================================================================================");
     }
 
+    public void print(PrintWriter pw){
+        pw.println("============================================================================================================================================");
+        pw.println("Node type                                                                   | data                | type               | subtreestring");
+        pw.println("============================================================================================================================================");
+        this.printSubtree(pw);
+        pw.println("============================================================================================================================================");
+    }
+
     public void printSubtree(){
         //if(m_data == null && this.m_children.size() == 0)return;
         for (int i = 0; i < Node.m_nodeLevel; i++ )
@@ -155,7 +164,34 @@ public abstract class Node {
         }
         Node.m_nodeLevel--;
     }
+    public void printSubtree(PrintWriter pw){
+        //if(m_data == null && this.m_children.size() == 0)return;
+        for (int i = 0; i < Node.m_nodeLevel; i++ )
+            pw.print("  ");
 
+        String toprint = String.format("%-75s" , this.getClass().getName().substring(5));
+        for (int i = 0; i < Node.m_nodeLevel; i++ )
+            toprint = toprint.substring(0, toprint.length() - 2);
+        toprint += String.format("%-22s" , (this.getData() == null || this.getData().isEmpty())         ? " | " : " | " + this.getData());
+        toprint += String.format("%-22s" , (this.getType() == null || this.getType().isEmpty())         ? " | " : " | " + this.getType());
+        toprint += (String.format("%-26s" , (this.m_subtreeString == null || this.m_subtreeString.isEmpty()) ? " | " : " | " + (this.m_subtreeString.replaceAll("\\n+",""))));
+
+        pw.println(toprint);
+
+        Node.m_nodeLevel++;
+        List<Node> children = this.getChildren();
+        //Reversing children order
+        ArrayList<Node> newChildren = new ArrayList<Node>();
+        for(int i = children.size() - 1; i>=0; i--){
+            newChildren.add(children.get(i));
+        }
+        this.m_children = newChildren;
+        //Recursively printing children subtrees
+        for (Node child : m_children) {
+            child.printSubtree(pw);
+        }
+        Node.m_nodeLevel--;
+    }
     public void accept(Visitor p_visitor) {
         p_visitor.visit(this);
     }

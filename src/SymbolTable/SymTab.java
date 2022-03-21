@@ -32,7 +32,7 @@ public class SymTab {
         SymTabEntry returnvalue = new SymTabEntry();
         boolean found = false;
         for( SymTabEntry rec : m_symlist) {
-            if (rec.m_name.equals(p_tolookup)) {
+            if (p_tolookup.equals(rec.m_name)) {
                 returnvalue = rec;
                 found = true;
             }

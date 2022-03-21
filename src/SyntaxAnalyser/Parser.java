@@ -246,9 +246,19 @@ public class Parser {
             SemanticAction action = semanticActionStack.pop();
             performAction(astStack, action);
         }
-        astStack.peek().print();
-        SymTableCreationVisitor symTableCreationVisitor = new SymTableCreationVisitor("Output/SymTab.txt");
+        try{
+            PrintWriter pw = new PrintWriter(new File("Output/test.outAST"));
+            astStack.peek().print(pw);
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.out.println("AST formation done!");
+        SymTableCreationVisitor symTableCreationVisitor = new SymTableCreationVisitor(
+                "Output/test.outSymbolTable"
+        );
         astStack.peek().accept(symTableCreationVisitor);
+        System.out.println("OutSymbolTable formation done!");
         return astStack.peek();
     }
 }

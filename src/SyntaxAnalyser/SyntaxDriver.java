@@ -8,10 +8,10 @@ public class SyntaxDriver {
                         "Resources\\FirstSetTable.txt",
                         "Resources\\FollowSetTable.txt",
                         "Resources\\SemanticTable.txt",
-                        "Input\\lexFile",
-                        "Output\\src.outdev",
-                        "Output\\src.outdeverrors",
-                        "Output\\src.outtoken",
-                        "Output\\src.outerrors");
+                        "Input\\test.src",
+                        "Output\\test.outderivation",
+                        "Output\\test.outderivationerrors",
+                        "Output\\test.outtoken",
+                        "Output\\test.outtokenerrors");
     }
 }

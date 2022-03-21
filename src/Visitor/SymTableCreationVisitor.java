@@ -82,17 +82,61 @@ public class SymTableCreationVisitor extends Visitor{
 
     @Override
     public void visit(FuncDefNode p_node) {
-
+        p_node.m_symtabentry = p_node.m_symtab.lookupName(p_node.getChildren().get(0).getData());
+        //member function
+        if(p_node.m_symtabentry.m_name != null) {
+            p_node.m_symtab = p_node.m_symtabentry.m_subtable;
+            //for each fparam and varDeclOrStat
+            for(Node child:p_node.getChildren()){
+                child.m_symtab = p_node.m_symtab;
+                child.accept(this);
+            }
+        }
+        //free function
+        else{
+            String funcName = p_node.getChildren().get(0).getData();
+            ArrayList<String> param_types = new ArrayList<>();
+            for(Node fParam: p_node.getChildren().get(1).getChildren()){
+                param_types.add(fParam.getChildren().get(0).getData());
+            }
+            String returnType = p_node.getChildren().get(2).getData();
+            SymTab localTable = new SymTab(1,"::" + funcName, p_node.m_symtab);
+            p_node.m_symtabentry = new FuncEntry(returnType, funcName, param_types, localTable);
+            p_node.m_symtab.addEntry(p_node.m_symtabentry);
+            p_node.m_symtab = localTable;
+            //for each varDeclOrStat only
+            for(int i = 3; i < p_node.getChildren().size();i++){
+                Node child = p_node.getChildren().get(i);
+                child.m_symtab = p_node.m_symtab;
+                child.accept(this);
+            }
+        }
     }
 
     @Override
     public void visit(FParamNode p_node) {
-
+        String paramName = p_node.getChildren().get(0).getData();
+        String paramType = p_node.getChildren().get(1).getData();
+        ArrayList<Integer> dimList = new ArrayList<>();
+        for (Node dim : p_node.getChildren().get(2).getChildren()){
+            if(dim.getClass() == EmptyArraySizeNode.class){
+                dimList.add(null);
+            }
+            else{
+                //TODO:TRY CATCH
+                Integer dimval = Integer.parseInt(dim.getData());
+                dimList.add(dimval);
+            }
+        }
+        p_node.m_symtab.addEntry(new VarEntry("param",paramType, paramName, dimList));
     }
 
     @Override
     public void visit(FParamsListNode p_node) {
-
+        for(Node child:p_node.getChildren()){
+            child.m_symtab = p_node.m_symtab;
+            child.accept(this);
+        }
     }
 
     @Override
@@ -115,13 +159,23 @@ public class SymTableCreationVisitor extends Visitor{
     }
 
     @Override
-    public void visit(ImplDefNode p_node) {
-
+    public void visit(ImplDefNode p_node) {;
+        p_node.m_symtabentry = p_node.m_symtab.lookupName(p_node.getChildren().get(0).getData());
+        p_node.m_symtab = p_node.m_symtabentry.m_subtable;
+        for (Node child : p_node.getChildren() ) {
+            child.m_symtab = p_node.m_symtab;
+            child.accept(this);
+        }
     }
 
     @Override
     public void visit(ImplFuncDefNode p_node) {
-
+        //p_node.m_symtabentry = p_node.m_symtab.lookupName(p_node.getChildren().get(0).getData());
+        //p_node.m_symtab = p_node.m_symtabentry.m_subtable;
+        for (Node child : p_node.getChildren() ) {
+            child.m_symtab = p_node.m_symtab;
+            child.accept(this);
+        }
     }
 
     @Override
@@ -148,36 +202,57 @@ public class SymTableCreationVisitor extends Visitor{
         String memberVisibility = p_node.getChildren().get(0).getData();
         Node funcOrVarDecl  = p_node.getChildren().get(1);
         if(funcOrVarDecl.getClass() == FuncDeclNode.class){
+            String className = p_node.m_symtab.m_name;
             String funcName = funcOrVarDecl.getChildren().get(0).getData();
-            String funcType = funcOrVarDecl.getChildren().get(2).getData();
-            SymTab localtable = new SymTab(2,funcName, p_node.m_symtab);
-            ArrayList<VarEntry> paramlist = new ArrayList<>();
+            String funcReturnType = funcOrVarDecl.getChildren().get(2).getData();
+            SymTab localtable = new SymTab(2,className + "::" + funcName, p_node.m_symtab);
+            ArrayList<String> paramTypeList = new ArrayList<>();
             for (Node param : funcOrVarDecl.getChildren().get(1).getChildren()){
                 String paramName = param.getChildren().get(0).getData();
-                String paramType = param.getChildren().get(1).getData();
-                ArrayList<Integer> dimList = new ArrayList<>();
+                StringBuilder paramType = new StringBuilder(param.getChildren().get(1).getData());
+                ArrayList<String> dimList = new ArrayList<>();
                 for (Node dim : param.getChildren().get(2).getChildren()){
                     if(dim.getClass() == EmptyArraySizeNode.class){
                         dimList.add(null);
                     }
                     else{
                         //TODO:TRY CATCH
-                        Integer dimval = Integer.parseInt(dim.getData());
-                        dimList.add(dimval);
+                        dimList.add(dim.getData());
                     }
                 }
-                paramlist.add(new VarEntry("fParam",paramType, paramName, dimList));
-                //p_node.m_symtab.addEntry(varEntry);
+                for(String index: dimList){
+                    paramType.append("[");
+                    if(index!=null){
+                        paramType.append("index");
+                    }
+                    paramType.append("]");
+                }
+                paramTypeList.add(paramType.toString());
             }
-            p_node.m_symtabentry = new MemberFuncEntry(funcType, funcName, paramlist, memberVisibility, localtable);
+            p_node.m_symtabentry = new MemberFuncEntry(funcReturnType, funcName, paramTypeList, memberVisibility, localtable);
             p_node.m_symtab.addEntry(p_node.m_symtabentry);
             p_node.m_symtab = localtable;
         }
-        // propagate accepting the same visitor to all the children
-        // this effectively achieves Depth-First AST Traversal
-        for (Node child : p_node.getChildren() ) {
-            child.m_symtab = p_node.m_symtab;
-            child.accept(this);
+        else if(funcOrVarDecl.getClass() == VarDeclNode.class){
+            String varName = funcOrVarDecl.getChildren().get(0).getData();
+            String varType = funcOrVarDecl.getChildren().get(1).getData();
+            ArrayList<Integer> dimList = new ArrayList<>();
+            for (Node dim : funcOrVarDecl.getChildren().get(2).getChildren()){
+                if(dim.getClass() == EmptyArraySizeNode.class){
+                    dimList.add(null);
+                }
+                else{
+                    //TODO:TRY CATCH
+                    Integer dimval = Integer.parseInt(dim.getData());
+                    dimList.add(dimval);
+                }
+            }
+            p_node.m_symtabentry = new MemberVarEntry("data", varType, varName, dimList, memberVisibility);
+            p_node.m_symtab.addEntry(p_node.m_symtabentry);
+        }
+        else{
+            System.out.println("Error at line 179 SymTableCreationVisitor.java");
+            System.exit(1);
         }
     }
 
@@ -309,12 +384,31 @@ public class SymTableCreationVisitor extends Visitor{
 
     @Override
     public void visit(VarDeclNode p_node) {
-
+        String varName = p_node.getChildren().get(0).getData();
+        String varType = p_node.getChildren().get(1).getData();
+        ArrayList<Integer> dimList = new ArrayList<>();
+        for (Node dim : p_node.getChildren().get(2).getChildren()){
+            if(dim.getClass() == EmptyArraySizeNode.class){
+                dimList.add(null);
+            }
+            else{
+                //TODO:TRY CATCH
+                Integer dimval = Integer.parseInt(dim.getData());
+                dimList.add(dimval);
+            }
+        }
+        p_node.m_symtabentry = new VarEntry("local", varType, varName, dimList);
+        if(p_node.m_symtab !=null){
+            p_node.m_symtab.addEntry(p_node.m_symtabentry);
+        }
     }
 
     @Override
     public void visit(VarDeclOrStatNode p_node) {
-
+        for(Node child:p_node.getChildren()){
+            child.m_symtab = p_node.m_symtab;
+            child.accept(this);
+        }
     }
 
     @Override
