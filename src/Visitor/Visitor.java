@@ -41,6 +41,7 @@ public abstract class Visitor {
     public abstract void visit(IndiceListNode    p_node);
     public abstract void visit(IntNumNode        p_node);
     public abstract void visit(InherListNode     p_node);
+    public abstract void visit(MemberNode        p_node);
     public abstract void visit(MemberListNode    p_node);
     public abstract void visit(MinusNode         p_node);
     public abstract void visit(MultNode          p_node);

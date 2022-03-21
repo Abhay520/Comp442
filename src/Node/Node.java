@@ -29,14 +29,14 @@ public abstract class Node {
     public  String      m_subtreeString      = "";
 
     // introduced by symbol table creation visitor
-    public SymTab m_symtab             = null;
+    public SymTab      m_symtab             = null;
     public SymTabEntry m_symtabentry        = null;
 
     // introduced by code generation visitors
     //public  String      m_localRegister      = "";
     //public  String      m_leftChildRegister  = "";
     //public  String      m_rightChildRegister = "";
-    //public  String      m_moonVarName        = "";
+    public  String        m_varName        = "";
 
     public Node() {}
 
@@ -123,7 +123,7 @@ public abstract class Node {
     }
 
     public void printSubtree(){
-        if(m_data == null && this.m_children.size() == 0)return;
+        //if(m_data == null && this.m_children.size() == 0)return;
         for (int i = 0; i < Node.m_nodeLevel; i++ )
             System.out.print("  ");
 

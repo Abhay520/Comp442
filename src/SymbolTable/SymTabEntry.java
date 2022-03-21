@@ -1,15 +1,16 @@
 package SymbolTable;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 public class SymTabEntry {
-    public String          m_kind       = null;
-    public String          m_type       = null;
-    public String          m_name       = null;
-    public int             m_size       = 0;
-    public int             m_offset     = 0;
-    public SymTab          m_subtable   = null;
-    public Vector<Integer> m_dims       = new Vector<Integer>();
+    public String             m_kind       = null;
+    public String             m_type       = null;
+    public String             m_name       = null;
+    public int                m_size       = 0;
+    public int                m_offset     = 0;
+    public SymTab             m_subtable   = null;
+    public ArrayList<Integer> m_dims    = new ArrayList<>();
 
     public SymTabEntry() {}
 

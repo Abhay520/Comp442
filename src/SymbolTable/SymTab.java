@@ -46,17 +46,17 @@ public class SymTab {
     }
 
     public String toString(){
-        String stringtoreturn = new String();
-        String prelinespacing = new String();
+        StringBuilder stringtoreturn = new StringBuilder();
+        String prelinespacing = "";
         for (int i = 0; i < this.m_tablelevel; i++)
             prelinespacing += "|    ";
-        stringtoreturn += "\n" + prelinespacing + "=====================================================\n";
-        stringtoreturn += prelinespacing + String.format("%-25s" , "| table: " + m_name) + String.format("%-27s" , " scope offset: " + m_size) + "|\n";
-        stringtoreturn += prelinespacing        + "=====================================================\n";
-        for (int i = 0; i < m_symlist.size(); i++){
-            stringtoreturn +=  prelinespacing + m_symlist.get(i).toString() + '\n';
+        stringtoreturn.append("\n").append(prelinespacing).append("=====================================================\n");
+        stringtoreturn.append(prelinespacing).append(String.format("%-25s", "| table: " + m_name)).append("\n");//append(String.format("%-27s", " scope offset: " + m_size)).append("|\n");
+        stringtoreturn.append(prelinespacing).append("=====================================================\n");
+        for (SymTabEntry symTabEntry : m_symlist) {
+            stringtoreturn.append(prelinespacing).append(symTabEntry.toString()).append('\n');
         }
-        stringtoreturn += prelinespacing        + "=====================================================";
-        return stringtoreturn;
+        stringtoreturn.append(prelinespacing).append("=====================================================");
+        return stringtoreturn.toString();
     }
 }

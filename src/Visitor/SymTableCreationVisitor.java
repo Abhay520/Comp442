@@ -5,12 +5,21 @@ import SymbolTable.*;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 public class SymTableCreationVisitor extends Visitor{
-    private String m_outputfilename;
-    public SymTableCreationVisitor(String outputFileName){
-        this.m_outputfilename = outputFileName;
+    public Integer m_tempVarNum     = 0;
+    public String  m_outputfilename = "";
+
+    public SymTableCreationVisitor(String p_filename) {
+        this.m_outputfilename = p_filename;
     }
+
+    public String getNewTempVarName(){
+        m_tempVarNum++;
+        return "t" + m_tempVarNum;
+    }
+
     @Override
     public void visit(AddOpNode p_node) {
 
@@ -93,7 +102,6 @@ public class SymTableCreationVisitor extends Visitor{
 
     @Override
     public void visit(FuncDeclNode p_node) {
-
     }
 
     @Override
@@ -128,12 +136,57 @@ public class SymTableCreationVisitor extends Visitor{
 
     @Override
     public void visit(InherListNode p_node) {
+        ArrayList<String> idNames = new ArrayList<>();
+        for(Node idNode: p_node.getChildren()){
+            idNames.add(idNode.getData());
+        }
+        p_node.m_symtab.addEntry(new InheritedEntry(idNames, null));
+    }
 
+    @Override
+    public void visit(MemberNode p_node) {
+        String memberVisibility = p_node.getChildren().get(0).getData();
+        Node funcOrVarDecl  = p_node.getChildren().get(1);
+        if(funcOrVarDecl.getClass() == FuncDeclNode.class){
+            String funcName = funcOrVarDecl.getChildren().get(0).getData();
+            String funcType = funcOrVarDecl.getChildren().get(2).getData();
+            SymTab localtable = new SymTab(2,funcName, p_node.m_symtab);
+            ArrayList<VarEntry> paramlist = new ArrayList<>();
+            for (Node param : funcOrVarDecl.getChildren().get(1).getChildren()){
+                String paramName = param.getChildren().get(0).getData();
+                String paramType = param.getChildren().get(1).getData();
+                ArrayList<Integer> dimList = new ArrayList<>();
+                for (Node dim : param.getChildren().get(2).getChildren()){
+                    if(dim.getClass() == EmptyArraySizeNode.class){
+                        dimList.add(null);
+                    }
+                    else{
+                        //TODO:TRY CATCH
+                        Integer dimval = Integer.parseInt(dim.getData());
+                        dimList.add(dimval);
+                    }
+                }
+                paramlist.add(new VarEntry("fParam",paramType, paramName, dimList));
+                //p_node.m_symtab.addEntry(varEntry);
+            }
+            p_node.m_symtabentry = new MemberFuncEntry(funcType, funcName, paramlist, memberVisibility, localtable);
+            p_node.m_symtab.addEntry(p_node.m_symtabentry);
+            p_node.m_symtab = localtable;
+        }
+        // propagate accepting the same visitor to all the children
+        // this effectively achieves Depth-First AST Traversal
+        for (Node child : p_node.getChildren() ) {
+            child.m_symtab = p_node.m_symtab;
+            child.accept(this);
+        }
     }
 
     @Override
     public void visit(MemberListNode p_node) {
-
+        for (Node child : p_node.getChildren() ) {
+            child.m_symtab = p_node.m_symtab;
+            child.accept(this);
+        }
     }
 
     @Override
@@ -172,7 +225,7 @@ public class SymTableCreationVisitor extends Visitor{
     }
 
     @Override
-    public void visit(ProgNode p_node){
+    public void visit(ProgNode p_node) {
         p_node.m_symtab = new SymTab(0,"global", null);
         // propagate accepting the same visitor to all the children
         // this effectively achieves Depth-First AST Traversal
@@ -189,7 +242,7 @@ public class SymTableCreationVisitor extends Visitor{
             catch(Exception e){
                 e.printStackTrace();}
         }
-    };
+    }
 
     @Override
     public void visit(ReadStatNode p_node) {
@@ -228,17 +281,20 @@ public class SymTableCreationVisitor extends Visitor{
 
     @Override
     public void visit(StructDeclNode p_node) {
-
-    }
-
-    @Override
-    public void visit(StatBlockNode p_node) {
-        // propagate accepting the same visitor to all the children
-        // this effectively achieves Depth-First AST Traversal
+        String className = p_node.getChildren().get(0).getData();
+        SymTab localTable = new SymTab(1, className, p_node.m_symtab);
+        p_node.m_symtabentry = new ClassEntry(className, localTable);
+        p_node.m_symtab.addEntry(p_node.m_symtabentry);
+        p_node.m_symtab = localTable;
         for (Node child : p_node.getChildren() ) {
             child.m_symtab = p_node.m_symtab;
             child.accept(this);
         }
+    }
+
+    @Override
+    public void visit(StatBlockNode p_node) {
+
     }
 
     @Override
@@ -275,5 +331,4 @@ public class SymTableCreationVisitor extends Visitor{
     public void visit(WriteStatNode p_node) {
 
     }
-
 }
