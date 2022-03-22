@@ -5,7 +5,6 @@ import SymbolTable.*;
 
 import java.io.File;
 import java.io.PrintWriter;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class SymTableCreationVisitor extends Visitor{
@@ -85,16 +84,32 @@ public class SymTableCreationVisitor extends Visitor{
     /**Visit Function for a free function */
     public void visit(FuncDefNode p_node) {
         String funcName = p_node.getChildren().get(0).getData();
-        if(p_node.m_symtab.lookupName(funcName).m_name !=null){
-            System.err.println("Semantic Error: Free Function " + p_node.m_symtab.lookupName(funcName).m_name +
-                    " has been declared multiple times");
-            return;
-        }
         ArrayList<String> param_types = new ArrayList<>();
         for(Node fParam: p_node.getChildren().get(1).getChildren()){
-            param_types.add(fParam.getChildren().get(0).getData());
+            param_types.add(fParam.getChildren().get(1).getData());
         }
         String returnType = p_node.getChildren().get(2).getData();
+        //have same func name
+        if(funcName.equals(p_node.m_symtab.lookupName(funcName).m_name)){
+            FuncEntry oldFuncEntry = (FuncEntry)  p_node.m_symtab.lookupName(funcName);
+            //have same params
+            boolean sameParams = false;
+            if(oldFuncEntry.m_params_type.size() == param_types.size()){
+                for(int i = 0; i < oldFuncEntry.m_params_type.size(); i++){
+                    if(!oldFuncEntry.m_params_type.get(i).equals(param_types.get(i))){
+                        sameParams = false;break;
+                    }
+                    else sameParams = true;
+                }
+            }
+            if(sameParams){
+                System.err.println("Semantic Error: Free Function " + p_node.m_symtab.lookupName(funcName).m_name +
+                        " has been declared multiple times");
+                return;
+            }
+            //have diff params
+            System.err.println("Warning : overloaded free function " + p_node.m_symtab.lookupName(funcName).m_name);
+        }
         SymTab localTable = new SymTab(1,"::" + funcName, p_node.m_symtab);
         p_node.m_symtabentry = new FuncEntry(returnType, funcName, param_types, localTable);
         p_node.m_symtab.addEntry(p_node.m_symtabentry);
@@ -224,6 +239,11 @@ public class SymTableCreationVisitor extends Visitor{
                 }
                 paramTypeList.add(paramType.toString());
             }
+            if(p_node.m_symtab.lookupName(funcName).m_name !=null){
+                System.err.println("Semantic Error: Member function " + funcName +
+                        " has been declared multiple times");
+                return;
+            }
             p_node.m_symtabentry = new MemberFuncEntry(funcReturnType, funcName, paramTypeList, memberVisibility, localtable);
             p_node.m_symtab.addEntry(p_node.m_symtabentry);
             p_node.m_symtab = localtable;
@@ -231,7 +251,7 @@ public class SymTableCreationVisitor extends Visitor{
         else if(funcOrVarDecl.getClass() == VarDeclNode.class){
             String varName = funcOrVarDecl.getChildren().get(0).getData();
             if(p_node.m_symtab.lookupName(varName).m_name !=null){
-                System.err.println("Semantic Error: Member variable " + p_node.m_symtab.lookupName(varName).m_name +
+                System.err.println("Semantic Error: Member variable " + varName +
                         " has been declared multiple times");
                 return;
             }
@@ -258,7 +278,8 @@ public class SymTableCreationVisitor extends Visitor{
 
     @Override
     public void visit(MemberFuncNode p_node){
-        p_node.m_symtabentry = p_node.m_symtab.lookupName(p_node.getChildren().get(0).getData());
+        String funcName = p_node.getChildren().get(0).getData();
+        p_node.m_symtabentry = p_node.m_symtab.lookupName(funcName);
         p_node.m_symtab = p_node.m_symtabentry.m_subtable;
         if(p_node.m_symtab == null){
             System.err.println("Semantic Error: " + p_node.getChildren().get(0).getData() +
