@@ -8,14 +8,12 @@ class A
 |    =====================================================
 |    | inherit   | none
 |    | data          | a           | float             | private
-|    | function  | evaluate    | [float]: float  | public
+|    | function  | evaluate    | [float, integer]: float  | public
 |    |    =====================================================
 |    |    | table: A::evaluate     
 |    |    =====================================================
 |    |    | param    | x    | float
-|    |    | local    | a    | float
 |    |    | local    | c    | float
-|    |    | param    | x    | float
 |    |    =====================================================
 |    =====================================================
 class B 
@@ -23,15 +21,14 @@ class B
 |    | table: B               
 |    =====================================================
 |    | inherit  |  [A]
-|    | data          | a           | float             | public
-|    | function  | evaluate    | [float]: float  | public
+|    | data          | b           | float             | public
+|    | data          | a           | float             | private
+|    | function  | evaluate    | [float, integer]: float  | public
 |    |    =====================================================
 |    |    | table: A::evaluate     
 |    |    =====================================================
 |    |    | param    | x    | float
-|    |    | local    | a    | float
 |    |    | local    | c    | float
-|    |    | param    | x    | float
 |    |    =====================================================
 |    =====================================================
 function  | main    | [float, float]: void

@@ -5,6 +5,7 @@ import SymbolTable.*;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.lang.reflect.Member;
 import java.util.ArrayList;
 
 public class SymTableCreationVisitor extends Visitor{
@@ -239,12 +240,23 @@ public class SymTableCreationVisitor extends Visitor{
                 }
                 paramTypeList.add(paramType.toString());
             }
+            MemberFuncEntry newEntry = new MemberFuncEntry(funcReturnType, funcName, paramTypeList, memberVisibility, localtable);
             if(p_node.m_symtab.lookupName(funcName).m_name !=null){
-                System.err.println("Semantic Error: Member function " + funcName +
-                        " has been declared multiple times");
-                return;
+                int bool = newEntry.equal(p_node.m_symtab.lookupName(funcName));
+                if(bool == 0){
+                    System.err.println("Semantic Error: Member function " + funcName +
+                            " has been declared multiple times");
+                    return;
+                }
+                else if(bool == 1){
+                    System.err.println("Warning: Member function " + funcName + " has been overloaded");
+                }
+                else{
+                    System.err.println("Error line 255 SymTabVisitor.java");
+                    System.exit(1);
+                }
             }
-            p_node.m_symtabentry = new MemberFuncEntry(funcReturnType, funcName, paramTypeList, memberVisibility, localtable);
+            p_node.m_symtabentry = newEntry;
             p_node.m_symtab.addEntry(p_node.m_symtabentry);
             p_node.m_symtab = localtable;
         }
@@ -279,18 +291,37 @@ public class SymTableCreationVisitor extends Visitor{
     @Override
     public void visit(MemberFuncNode p_node){
         String funcName = p_node.getChildren().get(0).getData();
-        p_node.m_symtabentry = p_node.m_symtab.lookupName(funcName);
-        p_node.m_symtab = p_node.m_symtabentry.m_subtable;
         if(p_node.m_symtab == null){
             System.err.println("Semantic Error: " + p_node.getChildren().get(0).getData() +
                     " is an undeclared function definition");
+            return;
+        }
+        //checking if each param type being defined is the same as the one of the func declared
+        ArrayList<String> paramTypesBeingDefined = new ArrayList<>();
+        for(Node child : p_node.getChildren().get(1).getChildren()){
+            paramTypesBeingDefined.add(child.getChildren().get(1).getData());
+        }
+        MemberFuncEntry funcEntry = (MemberFuncEntry) p_node.m_symtab.lookupName(funcName);
+        MemberFuncEntry newFuncEntry = new MemberFuncEntry("function",funcName, paramTypesBeingDefined, null, null);
+        int bool = funcEntry.equal(newFuncEntry);
+        if(bool == 0) {
+            p_node.m_symtabentry = p_node.m_symtab.lookupName(funcName);
+            p_node.m_symtab = p_node.m_symtabentry.m_subtable;
+        }
+        else if(bool == 1){
+            System.err.println("Semantic Error: Member function " + funcName + " defined has different params");
         }
         else{
-            //for each fparam and varDeclOrStat
-            for(Node child:p_node.getChildren()){
-                child.m_symtab = p_node.m_symtab;
-                child.accept(this);
-            }
+            System.err.println("Error line 313 SymTabVisitor.java");
+            System.err.println("bool is " + bool);
+            System.exit(1);
+        }
+        p_node.m_symtabentry = p_node.m_symtab.lookupName(funcName);
+        p_node.m_symtab = p_node.m_symtabentry.m_subtable;
+        //for each fparam and varDeclOrStat
+        for(Node child:p_node.getChildren()){
+            child.m_symtab = p_node.m_symtab;
+            child.accept(this);
         }
     }
 

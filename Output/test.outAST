@@ -21,6 +21,10 @@ ProgNode                                                                    |   
               IdNode                                                        | x                   |                     |                        
               TypeNode                                                      | float               |                     |                        
               ArraySizeNode                                                 |                     |                     |                        
+            FParamNode                                                      |                     |                     |                        
+              IdNode                                                        | y                   |                     |                        
+              TypeNode                                                      | integer             |                     |                        
+              ArraySizeNode                                                 |                     |                     |                        
           TypeNode                                                          | float               |                     |                        
   StructDeclNode                                                            |                     |                     |                        
     IdNode                                                                  | B                   |                     |                        
@@ -30,7 +34,7 @@ ProgNode                                                                    |   
       MemberNode                                                            |                     |                     |                        
         VisibilityNode                                                      | public              |                     |                        
         VarDeclNode                                                         |                     |                     |                        
-          IdNode                                                            | a                   |                     |                        
+          IdNode                                                            | b                   |                     |                        
           TypeNode                                                          | float               |                     |                        
           ArraySizeNode                                                     |                     |                     |                        
   ImplDefNode                                                               |                     |                     |                        
@@ -46,33 +50,6 @@ ProgNode                                                                    |   
         TypeNode                                                            | float               |                     |                        
         VarDeclOrStatNode                                                   |                     |                     |                        
           VarDeclNode                                                       |                     |                     |                        
-            IdNode                                                          | a                   |                     |                        
-            TypeNode                                                        | float               |                     |                        
-            ArraySizeNode                                                   |                     |                     |                        
-          VarDeclNode                                                       |                     |                     |                        
-            IdNode                                                          | c                   |                     |                        
-            TypeNode                                                        | float               |                     |                        
-            ArraySizeNode                                                   |                     |                     |                        
-          ReturnStatNode                                                    |                     |                     |                        
-            ExprNode                                                        |                     |                     |                        
-              ArithExprNode                                                 |                     |                     |                        
-                TermNode                                                    |                     |                     |                        
-                  FactorNode                                                |                     |                     |                        
-                    IntNumNode                                              | 0                   |                     |                        
-      MemberFuncNode                                                        |                     |                     |                        
-        IdNode                                                              | evaluate            |                     |                        
-        FParamsListNode                                                     |                     |                     |                        
-          FParamNode                                                        |                     |                     |                        
-            IdNode                                                          | x                   |                     |                        
-            TypeNode                                                        | float               |                     |                        
-            ArraySizeNode                                                   |                     |                     |                        
-        TypeNode                                                            | float               |                     |                        
-        VarDeclOrStatNode                                                   |                     |                     |                        
-          VarDeclNode                                                       |                     |                     |                        
-            IdNode                                                          | a                   |                     |                        
-            TypeNode                                                        | float               |                     |                        
-            ArraySizeNode                                                   |                     |                     |                        
-          VarDeclNode                                                       |                     |                     |                        
             IdNode                                                          | c                   |                     |                        
             TypeNode                                                        | float               |                     |                        
             ArraySizeNode                                                   |                     |                     |                        
@@ -95,10 +72,6 @@ ProgNode                                                                    |   
         ArraySizeNode                                                       |                     |                     |                        
     TypeNode                                                                | void                |                     |                        
     VarDeclOrStatNode                                                       |                     |                     |                        
-      VarDeclNode                                                           |                     |                     |                        
-        IdNode                                                              | a                   |                     |                        
-        TypeNode                                                            | float               |                     |                        
-        ArraySizeNode                                                       |                     |                     |                        
       VarDeclNode                                                           |                     |                     |                        
         IdNode                                                              | a                   |                     |                        
         TypeNode                                                            | float               |                     |                        
@@ -107,171 +80,4 @@ ProgNode                                                                    |   
         IdNode                                                              | b                   |                     |                        
         TypeNode                                                            | float               |                     |                        
         ArraySizeNode                                                       |                     |                     |                        
-  FuncDefNode                                                               |                     |                     |                        
-    IdNode                                                                  | main                |                     |                        
-    FParamsListNode                                                         |                     |                     |                        
-      FParamNode                                                            |                     |                     |                        
-        IdNode                                                              | A                   |                     |                        
-        TypeNode                                                            | float               |                     |                        
-        ArraySizeNode                                                       |                     |                     |                        
-      FParamNode                                                            |                     |                     |                        
-        IdNode                                                              | B                   |                     |                        
-        TypeNode                                                            | float               |                     |                        
-        ArraySizeNode                                                       |                     |                     |                        
-    TypeNode                                                                | void                |                     |                        
-    VarDeclOrStatNode                                                       |                     |                     |                        
-      VarDeclNode                                                           |                     |                     |                        
-        IdNode                                                              | f1                  |                     |                        
-        TypeNode                                                            | LINEAR              |                     |                        
-        ArraySizeNode                                                       |                     |                     |                        
-      VarDeclNode                                                           |                     |                     |                        
-        IdNode                                                              | f2                  |                     |                        
-        TypeNode                                                            | QUADRATIC           |                     |                        
-        ArraySizeNode                                                       |                     |                     |                        
-      VarDeclNode                                                           |                     |                     |                        
-        IdNode                                                              | counter             |                     |                        
-        TypeNode                                                            | integer             |                     |                        
-        ArraySizeNode                                                       |                     |                     |                        
-      AssignStatNode                                                        |                     |                     |                        
-        DotListNode                                                         |                     |                     |                        
-          DotNode                                                           |                     |                     |                        
-            IdNode                                                          | f1                  |                     |                        
-            IndiceListNode                                                  |                     |                     |                        
-        AssignNode                                                          | =                   |                     |                        
-        ExprNode                                                            |                     |                     |                        
-          ArithExprNode                                                     |                     |                     |                        
-            TermNode                                                        |                     |                     |                        
-              FactorNode                                                    |                     |                     |                        
-                DotListNode                                                 |                     |                     |                        
-                  DotNode                                                   |                     |                     |                        
-                    IdNode                                                  | f1                  |                     |                        
-                    IndiceListNode                                          |                     |                     |                        
-                  DotNode                                                   |                     |                     |                        
-                    IdNode                                                  | build               |                     |                        
-                    AParamsNode                                             |                     |                     |                        
-                      ExprNode                                              |                     |                     |                        
-                        ArithExprNode                                       |                     |                     |                        
-                          TermNode                                          |                     |                     |                        
-                            FactorNode                                      |                     |                     |                        
-                              IntNumNode                                    | 2                   |                     |                        
-                      ExprNode                                              |                     |                     |                        
-                        ArithExprNode                                       |                     |                     |                        
-                          TermNode                                          |                     |                     |                        
-                            FactorNode                                      |                     |                     |                        
-                              FloatNumNode                                  | 3.5                 |                     |                        
-      AssignStatNode                                                        |                     |                     |                        
-        DotListNode                                                         |                     |                     |                        
-          DotNode                                                           |                     |                     |                        
-            IdNode                                                          | f2                  |                     |                        
-            IndiceListNode                                                  |                     |                     |                        
-        AssignNode                                                          | =                   |                     |                        
-        ExprNode                                                            |                     |                     |                        
-          ArithExprNode                                                     |                     |                     |                        
-            TermNode                                                        |                     |                     |                        
-              FactorNode                                                    |                     |                     |                        
-                DotListNode                                                 |                     |                     |                        
-                  DotNode                                                   |                     |                     |                        
-                    IdNode                                                  | f2                  |                     |                        
-                    IndiceListNode                                          |                     |                     |                        
-                  DotNode                                                   |                     |                     |                        
-                    IdNode                                                  | build               |                     |                        
-                    AParamsNode                                             |                     |                     |                        
-                      ExprNode                                              |                     |                     |                        
-                        ArithExprNode                                       |                     |                     |                        
-                          TermNode                                          |                     |                     |                        
-                            FactorNode                                      |                     |                     |                        
-                              StatBlockNode                                 |                     |                     |                        
-                                SignNode                                    | -                   |                     |                        
-                                FactorNode                                  |                     |                     |                        
-                                  FloatNumNode                              | 2.0                 |                     |                        
-                      ExprNode                                              |                     |                     |                        
-                        ArithExprNode                                       |                     |                     |                        
-                          TermNode                                          |                     |                     |                        
-                            FactorNode                                      |                     |                     |                        
-                              FloatNumNode                                  | 1.0                 |                     |                        
-                      ExprNode                                              |                     |                     |                        
-                        ArithExprNode                                       |                     |                     |                        
-                          TermNode                                          |                     |                     |                        
-                            FactorNode                                      |                     |                     |                        
-                              FloatNumNode                                  | 0.0                 |                     |                        
-      AssignStatNode                                                        |                     |                     |                        
-        DotListNode                                                         |                     |                     |                        
-          DotNode                                                           |                     |                     |                        
-            IdNode                                                          | counter             |                     |                        
-            IndiceListNode                                                  |                     |                     |                        
-        AssignNode                                                          | =                   |                     |                        
-        ExprNode                                                            |                     |                     |                        
-          ArithExprNode                                                     |                     |                     |                        
-            TermNode                                                        |                     |                     |                        
-              FactorNode                                                    |                     |                     |                        
-                IntNumNode                                                  | 1                   |                     |                        
-      WhileStatNode                                                         |                     |                     |                        
-        RelExprNode                                                         |                     |                     |                        
-          ArithExprNode                                                     |                     |                     |                        
-            ArithExprNode                                                   |                     |                     |                        
-              TermNode                                                      |                     |                     |                        
-                FactorNode                                                  |                     |                     |                        
-                  DotListNode                                               |                     |                     |                        
-                    DotNode                                                 |                     |                     |                        
-                      IdNode                                                | counter             |                     |                        
-                      IndiceListNode                                        |                     |                     |                        
-          RelOpNode                                                         | <=                  |                     |                        
-          ArithExprNode                                                     |                     |                     |                        
-            ArithExprNode                                                   |                     |                     |                        
-              TermNode                                                      |                     |                     |                        
-                FactorNode                                                  |                     |                     |                        
-                  IntNumNode                                                | 10                  |                     |                        
-        StatBlockNode                                                       |                     |                     |                        
-          StatementNode                                                     |                     |                     |                        
-            WriteStatNode                                                   |                     |                     |                        
-              ExprNode                                                      |                     |                     |                        
-                ArithExprNode                                               |                     |                     |                        
-                  TermNode                                                  |                     |                     |                        
-                    FactorNode                                              |                     |                     |                        
-                      DotListNode                                           |                     |                     |                        
-                        DotNode                                             |                     |                     |                        
-                          IdNode                                            | counter             |                     |                        
-                          IndiceListNode                                    |                     |                     |                        
-          StatementNode                                                     |                     |                     |                        
-            WriteStatNode                                                   |                     |                     |                        
-              ExprNode                                                      |                     |                     |                        
-                ArithExprNode                                               |                     |                     |                        
-                  TermNode                                                  |                     |                     |                        
-                    FactorNode                                              |                     |                     |                        
-                      DotListNode                                           |                     |                     |                        
-                        DotNode                                             |                     |                     |                        
-                          IdNode                                            | f1                  |                     |                        
-                          IndiceListNode                                    |                     |                     |                        
-                        DotNode                                             |                     |                     |                        
-                          IdNode                                            | evaluate            |                     |                        
-                          AParamsNode                                       |                     |                     |                        
-                            ExprNode                                        |                     |                     |                        
-                              ArithExprNode                                 |                     |                     |                        
-                                TermNode                                    |                     |                     |                        
-                                  FactorNode                                |                     |                     |                        
-                                    DotListNode                             |                     |                     |                        
-                                      DotNode                               |                     |                     |                        
-                                        IdNode                              | counter             |                     |                        
-                                        IndiceListNode                      |                     |                     |                        
-          StatementNode                                                     |                     |                     |                        
-            WriteStatNode                                                   |                     |                     |                        
-              ExprNode                                                      |                     |                     |                        
-                ArithExprNode                                               |                     |                     |                        
-                  TermNode                                                  |                     |                     |                        
-                    FactorNode                                              |                     |                     |                        
-                      DotListNode                                           |                     |                     |                        
-                        DotNode                                             |                     |                     |                        
-                          IdNode                                            | f2                  |                     |                        
-                          IndiceListNode                                    |                     |                     |                        
-                        DotNode                                             |                     |                     |                        
-                          IdNode                                            | evaluate            |                     |                        
-                          AParamsNode                                       |                     |                     |                        
-                            ExprNode                                        |                     |                     |                        
-                              ArithExprNode                                 |                     |                     |                        
-                                TermNode                                    |                     |                     |                        
-                                  FactorNode                                |                     |                     |                        
-                                    DotListNode                             |                     |                     |                        
-                                      DotNode                               |                     |                     |                        
-                                        IdNode                              | counter             |                     |                        
-                                        IndiceListNode                      |                     |                     |                        
 ============================================================================================================================================

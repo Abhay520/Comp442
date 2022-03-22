@@ -1,45 +1,20 @@
 struct A {
     private let a : float;
-    public func evaluate (x : float) -> float;
+    public func evaluate (x : float, y : integer) -> float;
 };
 struct B inherits A {
-        public let a : float;
+        public let b : float;
 };
 
 impl A {
   func evaluate(x: float) -> float
   {
-    let a : float;
     let c: float;
     return (0);
   }
-  func evaluate(x: float) -> float
-    {
-      let a : float;
-      let c: float;
-      return (0);
-    }
 }
 
 func main(A: float, B: float) -> void {
    let a: float;
-   let a: float;
    let b: float;
-}
-
-func main(A: float, B: float) -> void
-{
-  let f1: LINEAR;
-  let f2: QUADRATIC;
-  let counter: integer;
-  f1 = f1.build(2, 3.5);
-  f2 = f2.build(-2.0, 1.0, 0.0);
-  counter = 1;
-
-  while(counter <= 10)
-  {
-    write(counter);
-    write(f1.evaluate(counter));
-    write(f2.evaluate(counter));
-  };
 }
