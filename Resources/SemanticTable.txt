@@ -103,3 +103,5 @@ DOTLIST subtree dotList -1
 EMPTYARRAYSIZE leaf emptyArraySize
 
 MEMBER subtree member 2
+
+MEMBERFUNC subtree memberFunc 4

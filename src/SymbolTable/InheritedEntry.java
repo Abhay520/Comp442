@@ -7,7 +7,7 @@ public class InheritedEntry extends SymTabEntry {
     ArrayList<String> m_inherList;
 
     public InheritedEntry(ArrayList<String> p_inherList,  SymTab p_subtable){
-        super("inheritedList", "inherit" , "p_name", p_subtable);
+        super("inheritedList", "inherit" , "inherit", p_subtable);
         m_inherList = p_inherList;
     }
 

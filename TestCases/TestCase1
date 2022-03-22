@@ -1,0 +1,14 @@
+struct POLYNOMIAL {
+	public func evaluate(x: float) -> float;
+};
+
+impl POLYNOMIAL {
+    func evaluate(x: float) -> float
+    {
+      return (0);
+    }
+    func hi(y : float) -> float
+    {
+      return (0);
+    }
+}

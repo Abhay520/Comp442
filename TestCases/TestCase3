@@ -1,0 +1,23 @@
+struct A {
+    private let a : float;
+    public func evaluate (x : float) -> float;
+};
+struct B inherits A {
+        public let a : float;
+};
+
+impl A {
+  func evaluate(x: float) -> float
+  {
+    let a : float;
+    let c: float;
+    let c: float;
+    return (0);
+  }
+}
+
+func main(y:float) -> void {
+   let a: float;
+   let a: float;
+   let b: float;
+}

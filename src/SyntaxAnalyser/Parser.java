@@ -247,15 +247,16 @@ public class Parser {
             performAction(astStack, action);
         }
         try{
-            PrintWriter pw = new PrintWriter(new File("Output/test.outAST"));
+            PrintWriter pw = new PrintWriter("Output\\test.outAST");
             astStack.peek().print(pw);
+            pw.close();
         }
         catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         System.out.println("AST formation done!");
         SymTableCreationVisitor symTableCreationVisitor = new SymTableCreationVisitor(
-                "Output/test.outSymbolTable"
+                "Output\\test.outSymbolTable"
         );
         astStack.peek().accept(symTableCreationVisitor);
         System.out.println("OutSymbolTable formation done!");

@@ -86,6 +86,7 @@ public class SemanticAction {
             case "dotList" -> popUntilEpsilon(astStack, semanticAction, new DotListNode());
             case "emptyArraySize" -> astStack.push(new EmptyArraySizeNode());
             case "member" -> addChildren(astStack, semanticAction, new MemberNode());
+            case "memberFunc" -> addChildren(astStack, semanticAction, new MemberFuncNode());
         }
     }
 

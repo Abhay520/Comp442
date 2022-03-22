@@ -5,6 +5,7 @@ import SymbolTable.*;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class SymTableCreationVisitor extends Visitor{
@@ -81,35 +82,28 @@ public class SymTableCreationVisitor extends Visitor{
     }
 
     @Override
+    /**Visit Function for a free function */
     public void visit(FuncDefNode p_node) {
-        p_node.m_symtabentry = p_node.m_symtab.lookupName(p_node.getChildren().get(0).getData());
-        //member function
-        if(p_node.m_symtabentry.m_name != null) {
-            p_node.m_symtab = p_node.m_symtabentry.m_subtable;
-            //for each fparam and varDeclOrStat
-            for(Node child:p_node.getChildren()){
-                child.m_symtab = p_node.m_symtab;
-                child.accept(this);
-            }
+        String funcName = p_node.getChildren().get(0).getData();
+        if(p_node.m_symtab.lookupName(funcName).m_name !=null){
+            System.err.println("Semantic Error: Free Function " + p_node.m_symtab.lookupName(funcName).m_name +
+                    " has been declared multiple times");
+            return;
         }
-        //free function
-        else{
-            String funcName = p_node.getChildren().get(0).getData();
-            ArrayList<String> param_types = new ArrayList<>();
-            for(Node fParam: p_node.getChildren().get(1).getChildren()){
-                param_types.add(fParam.getChildren().get(0).getData());
-            }
-            String returnType = p_node.getChildren().get(2).getData();
-            SymTab localTable = new SymTab(1,"::" + funcName, p_node.m_symtab);
-            p_node.m_symtabentry = new FuncEntry(returnType, funcName, param_types, localTable);
-            p_node.m_symtab.addEntry(p_node.m_symtabentry);
-            p_node.m_symtab = localTable;
-            //for each varDeclOrStat only
-            for(int i = 3; i < p_node.getChildren().size();i++){
-                Node child = p_node.getChildren().get(i);
-                child.m_symtab = p_node.m_symtab;
-                child.accept(this);
-            }
+        ArrayList<String> param_types = new ArrayList<>();
+        for(Node fParam: p_node.getChildren().get(1).getChildren()){
+            param_types.add(fParam.getChildren().get(0).getData());
+        }
+        String returnType = p_node.getChildren().get(2).getData();
+        SymTab localTable = new SymTab(1,"::" + funcName, p_node.m_symtab);
+        p_node.m_symtabentry = new FuncEntry(returnType, funcName, param_types, localTable);
+        p_node.m_symtab.addEntry(p_node.m_symtabentry);
+        p_node.m_symtab = localTable;
+        //for each varDeclOrStat only
+        for(int i = 3; i < p_node.getChildren().size();i++){
+            Node child = p_node.getChildren().get(i);
+            child.m_symtab = p_node.m_symtab;
+            child.accept(this);
         }
     }
 
@@ -161,6 +155,11 @@ public class SymTableCreationVisitor extends Visitor{
     @Override
     public void visit(ImplDefNode p_node) {;
         p_node.m_symtabentry = p_node.m_symtab.lookupName(p_node.getChildren().get(0).getData());
+        if(p_node.m_symtabentry.m_name == null){
+            System.err.println("Semantic Error: Class " + p_node.getChildren().get(0).getData() +
+                    " has not been declared");
+            return;
+        }
         p_node.m_symtab = p_node.m_symtabentry.m_subtable;
         for (Node child : p_node.getChildren() ) {
             child.m_symtab = p_node.m_symtab;
@@ -170,8 +169,6 @@ public class SymTableCreationVisitor extends Visitor{
 
     @Override
     public void visit(ImplFuncDefNode p_node) {
-        //p_node.m_symtabentry = p_node.m_symtab.lookupName(p_node.getChildren().get(0).getData());
-        //p_node.m_symtab = p_node.m_symtabentry.m_subtable;
         for (Node child : p_node.getChildren() ) {
             child.m_symtab = p_node.m_symtab;
             child.accept(this);
@@ -198,6 +195,7 @@ public class SymTableCreationVisitor extends Visitor{
     }
 
     @Override
+    /**Visit Function for Function declarations and var decl in structs*/
     public void visit(MemberNode p_node) {
         String memberVisibility = p_node.getChildren().get(0).getData();
         Node funcOrVarDecl  = p_node.getChildren().get(1);
@@ -208,17 +206,14 @@ public class SymTableCreationVisitor extends Visitor{
             SymTab localtable = new SymTab(2,className + "::" + funcName, p_node.m_symtab);
             ArrayList<String> paramTypeList = new ArrayList<>();
             for (Node param : funcOrVarDecl.getChildren().get(1).getChildren()){
-                String paramName = param.getChildren().get(0).getData();
+                //String paramName = param.getChildren().get(0).getData();
                 StringBuilder paramType = new StringBuilder(param.getChildren().get(1).getData());
                 ArrayList<String> dimList = new ArrayList<>();
                 for (Node dim : param.getChildren().get(2).getChildren()){
                     if(dim.getClass() == EmptyArraySizeNode.class){
                         dimList.add(null);
                     }
-                    else{
-                        //TODO:TRY CATCH
-                        dimList.add(dim.getData());
-                    }
+                    else dimList.add(dim.getData());
                 }
                 for(String index: dimList){
                     paramType.append("[");
@@ -235,6 +230,11 @@ public class SymTableCreationVisitor extends Visitor{
         }
         else if(funcOrVarDecl.getClass() == VarDeclNode.class){
             String varName = funcOrVarDecl.getChildren().get(0).getData();
+            if(p_node.m_symtab.lookupName(varName).m_name !=null){
+                System.err.println("Semantic Error: Member variable " + p_node.m_symtab.lookupName(varName).m_name +
+                        " has been declared multiple times");
+                return;
+            }
             String varType = funcOrVarDecl.getChildren().get(1).getData();
             ArrayList<Integer> dimList = new ArrayList<>();
             for (Node dim : funcOrVarDecl.getChildren().get(2).getChildren()){
@@ -251,8 +251,25 @@ public class SymTableCreationVisitor extends Visitor{
             p_node.m_symtab.addEntry(p_node.m_symtabentry);
         }
         else{
-            System.out.println("Error at line 179 SymTableCreationVisitor.java");
+            System.err.println("Error at line 179 SymTableCreationVisitor.java");
             System.exit(1);
+        }
+    }
+
+    @Override
+    public void visit(MemberFuncNode p_node){
+        p_node.m_symtabentry = p_node.m_symtab.lookupName(p_node.getChildren().get(0).getData());
+        p_node.m_symtab = p_node.m_symtabentry.m_subtable;
+        if(p_node.m_symtab == null){
+            System.err.println("Semantic Error: " + p_node.getChildren().get(0).getData() +
+                    " is an undeclared function definition");
+        }
+        else{
+            //for each fparam and varDeclOrStat
+            for(Node child:p_node.getChildren()){
+                child.m_symtab = p_node.m_symtab;
+                child.accept(this);
+            }
         }
     }
 
@@ -317,6 +334,19 @@ public class SymTableCreationVisitor extends Visitor{
             catch(Exception e){
                 e.printStackTrace();}
         }
+        //For Member Functions declared but not defined
+        //Note : ignoring all free functions
+        for(SymTabEntry symTab: p_node.m_symtab.m_symlist){
+            for(SymTabEntry entry:symTab.m_subtable.m_symlist){
+                if(entry.getClass() != MemberFuncEntry.class)continue;
+                if(!entry.m_name.equals("inherit")){
+                    if(entry.m_subtable.m_symlist.size() == 0){
+                        System.out.println("Semantic error : " +
+                                entry.m_name + " has been declared but not defined!");
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -357,6 +387,19 @@ public class SymTableCreationVisitor extends Visitor{
     @Override
     public void visit(StructDeclNode p_node) {
         String className = p_node.getChildren().get(0).getData();
+        if(p_node.m_symtab.lookupName(className).m_name !=null){
+            System.out.println("Semantic Error: Class " + p_node.m_symtab.lookupName(className).m_name +
+                    " has been declared multiple times");
+            return;
+        }
+        ArrayList<String> inherList = new ArrayList<>();
+        for(Node idNode: p_node.getChildren().get(1).getChildren()){
+            inherList.add(idNode.getData());
+        }
+        ArrayList<SymTabEntry> entryList = new ArrayList<>();
+        for(String name: inherList){
+            entryList.addAll(p_node.m_symtab.lookupName(name).m_subtable.m_symlist);
+        }
         SymTab localTable = new SymTab(1, className, p_node.m_symtab);
         p_node.m_symtabentry = new ClassEntry(className, localTable);
         p_node.m_symtab.addEntry(p_node.m_symtabentry);
@@ -364,6 +407,16 @@ public class SymTableCreationVisitor extends Visitor{
         for (Node child : p_node.getChildren() ) {
             child.m_symtab = p_node.m_symtab;
             child.accept(this);
+        }
+        //Adding inherited entries
+        for(SymTabEntry entry: entryList){
+            if(entry.getClass() != InheritedEntry.class){
+                //shadowed inherited data member
+                if(p_node.m_symtab.lookupName(entry.m_name).m_name !=null){
+                    System.err.println("Warning : Shadowed inherited data member " + entry.m_name + " in class " + className);
+                }
+                else p_node.m_symtab.addEntry(entry);
+            }
         }
     }
 
@@ -384,8 +437,29 @@ public class SymTableCreationVisitor extends Visitor{
 
     @Override
     public void visit(VarDeclNode p_node) {
+        if(p_node.m_symtab == null)return;
         String varName = p_node.getChildren().get(0).getData();
         String varType = p_node.getChildren().get(1).getData();
+        //if shadowing data variable in member function
+        if(p_node.getParent().getParent().getClass() ==  MemberFuncNode.class){
+            if("data".equals(p_node.m_symtab.lookupName(varName).m_kind)){
+                System.err.println("Warning : local variable " + varName + " shadows data member of class " + p_node.m_symtab.m_name);
+            }
+            //if multiple declared ids in member function
+            if("local".equals(p_node.m_symtab.lookupName(varName).m_kind)){
+                System.err.println("Semantic error : Multiple variables declared " + varName + " in member function " + p_node.m_symtab.m_name);
+                return;
+            }
+        }
+        //IF Multiple declared ids in free function
+        if(p_node.getParent().getParent().getClass() ==  FuncDefNode.class){
+            if(varName.equals(p_node.m_symtab.lookupName(varName).m_name)) {
+                System.err.println("Semantic error: " + " multiple declared identifier " + varName + " in function " +
+                        p_node.m_symtab.m_name);
+                return;
+            }
+        }
+
         ArrayList<Integer> dimList = new ArrayList<>();
         for (Node dim : p_node.getChildren().get(2).getChildren()){
             if(dim.getClass() == EmptyArraySizeNode.class){
@@ -398,9 +472,7 @@ public class SymTableCreationVisitor extends Visitor{
             }
         }
         p_node.m_symtabentry = new VarEntry("local", varType, varName, dimList);
-        if(p_node.m_symtab !=null){
-            p_node.m_symtab.addEntry(p_node.m_symtabentry);
-        }
+        p_node.m_symtab.addEntry(p_node.m_symtabentry);
     }
 
     @Override
